@@ -20,7 +20,8 @@ var keywordSchema = mongoose.Schema({
 });
 
 var tweetSchema = mongoose.Schema({
-  tweet : {}
+  tweet : {},
+  keyword : String
 });
 
 var userSchema = mongoose.Schema({

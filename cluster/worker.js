@@ -8,20 +8,30 @@
 //If the keyword does not exists, exit
 //If the keyword becomes inactive, kill the process.
 var socket = require('socket.io-client')('http://localhost:4000/');
-var database = require('../database');
+var db = require('../database');
 require('dotenv').config();
 var twit = require('twit');
+var keywordID = process.argv[2];
+var keywords = '';
 
-var T = new Twit({
-    consumer_key: process.env.CONSUMER_KEY
-  , consumer_secret: process.env.CONSUMER_SECRET
-  , access_token: process.env.ACCESS_TOKEN
-  , access_token_secret: process.env.ACCESS_TOKEN_SECRET
+db.Keywords.find({_id : keywordID}, function(err, docs){
+  if(!err){
+    keywords = docs[0].firstParameter;
+  }
 });
 
-//create a twitter stream
-var stream = T.stream('statuses/filter');
+socket.on('tweet', function(tweet){
+  processTweet(tweet, keywordID);
+})
 
-stream.on('tweet', function(tweet){
-  console.log(tweet);
-});
+
+function processTweet(tweet, keyword){
+  console.log('Miss');
+  if(tweet.text.search(keywords) > 0){
+    console.log('Hit: Match found');
+    db.Tweets.create({
+      tweet : tweet,
+      keyword : keyword
+    });
+  }
+}

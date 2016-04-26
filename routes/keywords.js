@@ -19,11 +19,11 @@ router.get('/keywords/new', function(req, res, next){
 });
 
 router.get('/keywords/:id', function(req, res, next) {
-  db.Keywords.find({keyword_id : req.params.id}, function(err, tweets){
+  db.Tweets.find({keyword : req.params.id}, function(err, docs){
     if(!err){
-      res.render('keyword');
+      res.render('keyword', {title : 'Some title', tweets : docs});
     }
-  });
+  })
 });
 
 /**
