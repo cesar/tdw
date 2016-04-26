@@ -15,7 +15,6 @@ var keywordSchema = mongoose.Schema({
   thirdParameter : String,
   user : Number,
   status : Boolean,
-  port : Number,
   pid : Number
 });
 
