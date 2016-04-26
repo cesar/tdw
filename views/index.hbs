@@ -3,7 +3,7 @@
   </div>
   <div class="row">
     <div class="col-lg-12">
-      <a href="/search" class="btn btn-success pull-right">Add</a>
+      <a href="/keywords/new" class="btn btn-success pull-right">Add</a>
     </div>
   </div>
   <div class="row">
@@ -13,18 +13,26 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>id</th>
             <th>Initiated</th>
+            <th>Keywords</th>
             <th>Status</th>
+            <th>More</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th>1</th>
-            <th>123423</th>
-            <th>12/12/12</th>
-            <th>Yes</th>
-          </tr>
+          {{#each keywords as |keyword|}}
+              <tr>
+                <td>{{@index}}</td>
+                <td>{{keyword.created}}</td>
+                <td>{{keyword.firstParameter}} | {{keyword.secondParameter}} | {{keyword.thirdParameter}}</td>
+                {{#if keyword.status}}
+                  <td>Active</td>
+                {{else}}
+                  <td>Inactive</td>
+                {{/if}}
+                <td><a href="/keywords/{{keyword._id}}">View</a></td>
+              </tr>
+          {{/each}}
         </tbody>
       </table>
     </div>

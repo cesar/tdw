@@ -15,7 +15,8 @@ var keywordSchema = mongoose.Schema({
   thirdParameter : String,
   user : Number,
   status : Boolean,
-  pid : Number
+  pid : Number,
+  created : Date
 });
 
 var tweetSchema = mongoose.Schema({
