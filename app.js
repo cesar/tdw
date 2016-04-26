@@ -10,6 +10,8 @@ var users = require('./routes/users');
 var home = require('./routes/home');
 var search = require('./routes/search');
 
+var db = require('./database');
+
 var app = express();
 
 // view engine setup
