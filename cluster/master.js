@@ -11,9 +11,9 @@ var io = require('socket.io')(server);
 var database = require('../database');
 require('dotenv').config();
 var Twit = require('twit');
-var forever = require('forever-monitor');
+var pm2 = require('pm2');
+var fs = require('fs');
 
-server.listen(4000);
 
 var T = new Twit({
     consumer_key: process.env.CONSUMER_KEY
@@ -25,22 +25,51 @@ var T = new Twit({
 //create a twitter stream
 var stream = T.stream('statuses/sample');
 
+//Broadcast a tweet to all listeners
 stream.on('tweet', function(tweet){
   io.emit('tweet', tweet);
 });
 
 //Start a worker process
-app.get('/start/:keywordID', function (req, res) {
-  var child = new (forever.Monitor)('worker.js', {
-     max: 3,
-     silent: true,
-     args: [req.params.keywordID]
-   });
+app.get('/start/:id', function (req, res) {
+  var file = fs.readFileSync('worker.js');
+  fs.writeFileSync(req.params.id + '.js', file);
+  
+  pm2.connect(function(err) {
+    if (err) {
+      console.error(err);
+      process.exit(2);
+    }
+    pm2.start({
+      script    : req.params.id + '.js',         
+      max_memory_restart : '200M',
+      args : req.params.id
+    }, function(err, apps) {
+      pm2.disconnect();   // Disconnect from PM2
+      if (err) throw err
+      res.sendStatus(200);
+    });
+  });
+});
 
-  child.start();
+//Get information on running proccesses
+app.get('/list', function(req, res, next){
+  
 });
 
 //Kill a worker process
-app.get('/kill', function(req, res){
-
+app.get('/kill/:id', function(req, res){
+  pm2.connect(function(err) {
+    if (err) {
+      console.error(err);
+      process.exit(2);
+    }
+    pm2.stop(req.params.id, function(err){
+      if(err) throw err;
+      res.sendStatus(200);
+    })
+  });
 });
+
+
+server.listen(4000);
