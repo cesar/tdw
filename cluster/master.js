@@ -45,6 +45,7 @@ app.get('/start/:id', function (req, res) {
       max_memory_restart : '200M',
       args : req.params.id
     }, function(err, apps) {
+      console.log('Process created');
       pm2.disconnect();   // Disconnect from PM2
       if (err) throw err
       res.sendStatus(200);
@@ -54,11 +55,22 @@ app.get('/start/:id', function (req, res) {
 
 //Get information on running proccesses
 app.get('/list', function(req, res, next){
-  
+  pm2.connect(function(err){
+    if (err) {
+      console.error(err);
+      process.exit(2);
+    }
+    pm2.list(function(err, list){
+      if(err) throw err;
+      res.send({
+       list : list 
+      });
+    });
+  });
 });
 
 //Kill a worker process
-app.get('/kill/:id', function(req, res){
+app.get('/stop/:id', function(req, res){
   pm2.connect(function(err) {
     if (err) {
       console.error(err);
@@ -70,6 +82,7 @@ app.get('/kill/:id', function(req, res){
     })
   });
 });
+
 
 
 server.listen(4000);

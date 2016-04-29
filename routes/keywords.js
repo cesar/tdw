@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../database');
+var http = require('http');
 
 /**
 * Get keywords
@@ -8,7 +9,6 @@ var db = require('../database');
 router.get('/keywords', function(req, res, next){
   db.Keywords.find({}, function(err, keywords){
     if(!err){
-      console.log(keywords);
       res.render('index', {title : 'Current Searches', keywords : keywords});
     }
   });
@@ -39,16 +39,18 @@ router.post('/keywords', function(req, res, next){
       status : true,
       pid : 0,
       created : Date.now()
-    }, function(err, docs){
+    }, function(err, keyword){
       if(!err){
-        res.redirect('/keywords');
+        http.get('http://localhost:4000/start/' + keyword._id, () => {
+          res.redirect('/keywords');
+        });
       }
     });
 
 });
 
 router.put('/keywords/:id', function(req, res, next){
-
+  
 });
 
 

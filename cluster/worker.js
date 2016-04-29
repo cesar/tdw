@@ -26,7 +26,6 @@ socket.on('tweet', function(tweet){
 
 
 function processTweet(tweet, keyword){
-  console.log('Miss');
   if(tweet.text.search(keywords) > 0){
     console.log('Hit: Match found');
     db.Tweets.create({
