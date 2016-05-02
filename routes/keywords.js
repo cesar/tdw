@@ -19,16 +19,13 @@ router.get('/keywords/new', function(req, res, next){
 });
 
 router.get('/keywords/:id', function(req, res, next) {
-  var data = {};
+  var data = {}, stats = { languages : [], langCount : []};
   db.Keywords.findOne({_id : req.params.id}, function(err, keyword){
     db.Tweets.find({keyword : req.params.id}, function(err, tweets){
-      db.Stats.findOne({keyword : req.params.id}, function(err, stats){
         data.title = 'Active Search';
         data.keyword = keyword;
         data.tweets = tweets;
-        data.stats = stats;
         res.render('keyword', { data : data});
-      });
     });
   });
 });
@@ -45,7 +42,14 @@ router.post('/keywords', function(req, res, next){
       user : 1,
       status : true,
       pid : 0,
-      created : Date.now()
+      created : Date.now(),
+      sunday : 0,
+      monday : 0,
+      tuesday : 0,
+      wednesday : 0,
+      thursday : 0,
+      friday : 0,
+      saturday : 0
     }, function(err, keyword){
       if(!err){
         http.get('http://localhost:4000/start/' + keyword._id, () => {
@@ -61,6 +65,11 @@ router.put('/keywords/update/:id', function(req, res, next){
     res.redirect('/keywords/');
   })
 });
+
+
+
+
+
 
 
 

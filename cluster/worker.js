@@ -14,23 +14,65 @@ var twit = require('twit');
 var keywordID = process.argv[2];
 var keywords = '';
 
-db.Keywords.find({_id : keywordID}, function(err, docs){
-  if(!err){
-    keywords = docs[0].firstParameter;
-  }
-});
+
+if(keywordID){
+  db.Keywords.find({_id : keywordID}, function(err, docs){
+    if(!err){
+      keywords = docs[0].firstParameter;
+    }
+  });
+} else {
+  throw new Error("No keyword ID provided");
+}
+
 
 socket.on('tweet', function(tweet){
-  processTweet(tweet, keywordID);
-})
+  processTweet(tweet, keywords, keywordID);
+});
 
 
-function processTweet(tweet, keyword){
-  if(tweet.text.search(keywords) > 0){
-    console.log('Hit: Match found');
-    db.Tweets.create({
-      tweet : tweet,
-      keyword : keyword
+function processTweet(tweet, keywords, id){
+  console.log('miss');
+  if(tweet.text.search(keywords[0]) > 0 || tweet.text.search(keywords[1]) > 0 || tweet.text.search(keywords[2]) > 0 ){
+    db.Tweets.create({ tweet : tweet, keyword : id }, function(err){
+      if(!err){ 
+        countDate(tweet, id);
+      }
     });
+  }
+}
+
+
+
+/**
+ * Count tweets per day
+ */
+function countDate(tweet, id){
+  var day = new Date().getDay();
+  console.log(day);
+  switch(day){
+    case(0): //Sunday
+      db.Keywords.update({_id : id}, {$inc : { 'sunday' : 1}});
+      break;
+    case(1): 
+      db.Keywords.update({_id : id}, {$inc : { 'monday' : 1}});
+      break;
+    case(2): 
+      db.Keywords.update({_id : id}, {$inc : { 'tuesday' : 1}});
+      break;
+    case(3): 
+      db.Keywords.update({_id : id}, {$inc : { 'wednesday' : 1}});
+      break;
+    case(4): 
+      db.Keywords.update({_id : id}, {$inc : { 'thursday' : 1}});
+      break;
+    case(5): 
+      db.Keywords.update({_id : id}, {$inc : { 'friday' : 1}});
+      break;
+    case(6): 
+      db.Keywords.update({_id : id}, {$inc : { 'saturday' : 1}});
+      break;
+    default:
+      break;
   }
 }

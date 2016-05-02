@@ -7,11 +7,8 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-lg-6">
-      <canvas id="languages" width="400" height="400"></canvas>
-   </div>
-   <div class="col-lg-6">
-     <canvas id="languages" width="400" height="400"></canvas>
+  <div class="col-lg-12">
+      <canvas id="languages" width="400" height="100"></canvas>
    </div>
 </div>
 <div class="row">
@@ -21,14 +18,16 @@
         <tr>
           <th>#</th>
           <th>Tweet</th>
+          <th>Language</th>
           <th>User</th>
         </tr>
       </thead>
       <tbody>
-        {{#each tweets as |tweet|}}
+        {{#each data.tweets as |tweet|}}
             <tr>
               <td>{{@index}}</td>
               <td>{{tweet.tweet.text}}</td>
+              <td>{{tweet.tweet.lang}}</td>
               <td>{{tweet.tweet.user.screen_name}}</td>
             </tr>
         {{/each}}
@@ -40,16 +39,16 @@
 <script>
   var ctx = document.getElementById("languages");
   var data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     datasets: [
         {
-            label: "Languages",
+            label: "Tweets by Day",
             backgroundColor: "rgba(255,99,132,0.2)",
             borderColor: "rgba(255,99,132,1)",
             borderWidth: 1,
             hoverBackgroundColor: "rgba(255,99,132,0.4)",
             hoverBorderColor: "rgba(255,99,132,1)",
-            data: [65, 59, 80, 81, 56, 55, 40],
+            data: [{{data.keyword.sunday}}, {{data.keyword.monday}}, {{data.keyword.tuesday}}, {{data.keyword.wednesday}}, {{data.keyword.thursday}}, {{data.keyword.friday}}, {{data.keyword.saturday}}],
         }
     ]
   };

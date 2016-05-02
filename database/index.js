@@ -16,7 +16,14 @@ var keywordSchema = mongoose.Schema({
   user : Number,
   status : Boolean,
   pid : Number,
-  created : Date
+  created : Date,
+  sunday : Number,
+  monday : Number,
+  tuesday : Number, 
+  wednesday : Number,
+  thursday : Number,
+  friday : Number,
+  saturday : Number
 });
 
 var tweetSchema = mongoose.Schema({
@@ -24,12 +31,6 @@ var tweetSchema = mongoose.Schema({
   keyword : String
 });
 
-var statsSchema = mongoose.Schema({
-  languages : {},
-  users : Number,
-  count : Number,
-  keyword : String
-});
 
 var userSchema = mongoose.Schema({
   firstName : String,
@@ -41,5 +42,4 @@ var userSchema = mongoose.Schema({
 exports.Users = mongoose.model('Users', userSchema);
 exports.Tweets = mongoose.model('Tweets', tweetSchema);
 exports.Keywords = mongoose.model('Keywords', keywordSchema);
-exports.Stats = mongoose.model('Stats', statsSchema);
 exports.mongoose = mongoose;
