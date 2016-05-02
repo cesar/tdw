@@ -19,12 +19,18 @@ router.get('/keywords/new', function(req, res, next){
 });
 
 router.get('/keywords/:id', function(req, res, next) {
-  
-  db.Tweets.find({keyword : req.params.id}, function(err, docs){
-    if(!err){
-      res.render('keyword', {title : 'Some title', tweets : docs});
-    }
-  })
+  var data = {};
+  db.Keywords.findOne({_id : req.params.id}, function(err, keyword){
+    db.Tweets.find({keyword : req.params.id}, function(err, tweets){
+      db.Stats.findOne({keyword : req.params.id}, function(err, stats){
+        data.title = 'Active Search';
+        data.keyword = keyword;
+        data.tweets = tweets;
+        data.stats = stats;
+        res.render('keyword', { data : data});
+      });
+    });
+  });
 });
 
 /**
