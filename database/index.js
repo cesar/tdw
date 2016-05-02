@@ -24,6 +24,10 @@ var tweetSchema = mongoose.Schema({
   keyword : String
 });
 
+var processesSchema = mongoose.Schema({
+  address : String
+});
+
 var userSchema = mongoose.Schema({
   firstName : String,
   lastName : String,
@@ -34,4 +38,5 @@ var userSchema = mongoose.Schema({
 exports.Users = mongoose.model('Users', userSchema);
 exports.Tweets = mongoose.model('Tweets', tweetSchema);
 exports.Keywords = mongoose.model('Keywords', keywordSchema);
+exports.Processes = mongoose.model('Processes', processesSchema);
 exports.mongoose = mongoose;

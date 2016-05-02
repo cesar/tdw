@@ -19,6 +19,7 @@ router.get('/keywords/new', function(req, res, next){
 });
 
 router.get('/keywords/:id', function(req, res, next) {
+  
   db.Tweets.find({keyword : req.params.id}, function(err, docs){
     if(!err){
       res.render('keyword', {title : 'Some title', tweets : docs});
@@ -49,8 +50,10 @@ router.post('/keywords', function(req, res, next){
 
 });
 
-router.put('/keywords/:id', function(req, res, next){
-  
+router.put('/keywords/update/:id', function(req, res, next){
+  db.Keywords.update({ _id : req.params.id }, {status : false }, function(err, docs){
+    res.redirect('/keywords/');
+  })
 });
 
 

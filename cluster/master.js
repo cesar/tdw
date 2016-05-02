@@ -62,7 +62,7 @@ app.get('/list', function(req, res, next){
     }
     pm2.list(function(err, list){
       if(err) throw err;
-      res.send({
+      res.json({
        list : list 
       });
     });
