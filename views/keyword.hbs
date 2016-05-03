@@ -3,7 +3,11 @@
 </div>
 <div class="row">
   <div class="col-lg-12">
-    <a href="/keywords/update/{{keyword._id}}" class="btn btn-danger pull-right">Cancel</a>
+    {{#if data.keyword.status}}
+      <button onclick="stopSearch()" class="btn btn-danger pull-right">Stop</button>
+    {{else}}
+      <button onclick="startSearch()" class="btn btn-danger pull-right">Start</button>
+    {{/if}}
   </div>
 </div>
 <div class="row">
@@ -56,4 +60,26 @@
     type: 'bar',
     data: data,
 });
+</script>
+
+<script>
+  function stopSearch(){
+    $.ajax({
+      url : '/keywords/{{data.keyword._id}}',
+      data : { action : 'stop'},
+      type : 'PUT'
+    }).done(function(suc){
+      window.location = '/keywords';
+    });
+  }
+  
+  function startSearch(){
+    $.ajax({
+      url : '/keywords/{{data.keyword._id}}',
+      data : { action : 'start'},
+      type : 'PUT'
+    }).done(function(suc){
+      location.replace('/keywords');
+    });
+  }
 </script>

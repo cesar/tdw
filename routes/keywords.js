@@ -60,10 +60,18 @@ router.post('/keywords', function(req, res, next){
 
 });
 
-router.put('/keywords/update/:id', function(req, res, next){
-  db.Keywords.update({ _id : req.params.id }, {status : false }, function(err, docs){
-    res.redirect('/keywords/');
-  })
+router.put('/keywords/:id', function(req, res, next){
+  if(req.body.action === 'start'){
+    http.get('http://localhost:4000/restart/' + req.params.id, () => {
+      res.redirect('/keywords');
+    });
+  } else if(req.body.action === 'stop'){
+    http.get('http://localhost:4000/stop/' + req.params.id, () => {
+      res.redirect('/keywords');
+    });
+  } else {
+    res.redirect('index');
+  }
 });
 
 

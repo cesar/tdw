@@ -23,7 +23,8 @@ var keywordSchema = mongoose.Schema({
   wednesday : Number,
   thursday : Number,
   friday : Number,
-  saturday : Number
+  saturday : Number,
+  address : String
 });
 
 var tweetSchema = mongoose.Schema({
