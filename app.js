@@ -10,6 +10,7 @@ var session = require('./routes/session');
 
 var db = require('./database');
 
+
 var app = express();
 
 // view engine setup
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', keywords);
 app.use('/', profile);
-// app.use('/', session);
+app.use('/', session);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

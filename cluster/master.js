@@ -32,9 +32,13 @@ stream.on('tweet', function(tweet){
 
 //Start a worker process
 app.get('/start/:id', function (req, res) {
+  
   var file = fs.readFileSync('worker.js');
   fs.writeFileSync(req.params.id + '.js', file);
   
+  /**
+   * Connect to the process manager in the local machine
+   */
   pm2.connect(function(err) {
     if (err) {
       console.error(err);
@@ -83,6 +87,21 @@ app.get('/stop/:id', function(req, res){
   });
 });
 
+/**
+ * Start a worker process after it has been stoped.
+ */
+app.get('/restart/:id', function(req, res, next){
+  pm2.connect(function(err){
+    if(err) {
+      console.error(err);
+      process.exit(2);
+    }
+    pm2.start({ name : req.params.id }, function(err){
+      if(err) throw err;
+      res.sendStatus(200);
+    });
+  });
+});
 
 
 server.listen(4000);

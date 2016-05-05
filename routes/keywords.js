@@ -8,6 +8,7 @@ var http = require('http');
 **/
 router.get('/keywords', function(req, res, next){
   db.Keywords.find({}, function(err, keywords){
+    console.log(err);
     if(!err){
       res.render('index', {title : 'Current Searches', keywords : keywords});
     }

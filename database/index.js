@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
+require('dotenv').config();
+
 
 //Connect to the database
-mongoose.connect('mongodb://localhost/tdw');
+mongoose.connect(process.env.DATABASE_URL);
 
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
