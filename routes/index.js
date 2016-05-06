@@ -5,29 +5,54 @@ var http = require('http');
 var passport = require('passport');
 
 /**
+ * Enforce route security
+ */
+function auth(req, res, next){
+  if(req.isAuthenticated()){
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
+/**
+ * Render login page
+ */
+router.get('/login', function(req, res, next){
+  res.render('login');  
+});
+
+/**
+ * Login the user
+ */
+router.post('/login', passport.authenticate('local'), function(req, res){
+  res.redirect('/keywords');
+});
+
+/**
 * Get keywords
 **/
-router.get('/keywords',  function(req, res, next){
-  console.log(req.isAuthenticated());
+router.get('/keywords',  auth, function(req, res, next){
+  
   db.Keywords.find({}, function(err, keywords){
     if(!err){
-      res.render('index', {title : 'Current Searches', keywords : keywords});
+      res.render('index', {title : 'Current Searches', keywords : keywords, user : req.user});
     }
   });
 });
 
-router.get('/keywords/new', function(req, res, next){
-  res.render('new');
+router.get('/keywords/new', auth, function(req, res, next){
+  res.render('new', {user : req.user});
 });
 
-router.get('/keywords/:id', function(req, res, next) {
+router.get('/keywords/:id', auth, function(req, res, next) {
   var data = {}, stats = { languages : [], langCount : []};
   db.Keywords.findOne({_id : req.params.id}, function(err, keyword){
     db.Tweets.find({keyword : req.params.id}, function(err, tweets){
         data.title = 'Active Search';
         data.keyword = keyword;
         data.tweets = tweets;
-        res.render('keyword', { data : data});
+        res.render('keyword', { data : data, user : req.user});
     });
   });
 });
@@ -35,7 +60,7 @@ router.get('/keywords/:id', function(req, res, next) {
 /**
 * Create keyword combinations
 **/
-router.post('/keywords', function(req, res, next){
+router.post('/keywords', auth, function(req, res, next){
 
     db.Keywords.create({
       firstParameter : req.body.firstParameter || '',
@@ -62,7 +87,7 @@ router.post('/keywords', function(req, res, next){
 
 });
 
-router.put('/keywords/:id', function(req, res, next){
+router.put('/keywords/:id', auth, function(req, res, next){
   if(req.body.action === 'start'){
     http.get('http://localhost:4000/restart/' + req.params.id, () => {
       res.redirect('/keywords');
@@ -76,29 +101,23 @@ router.put('/keywords/:id', function(req, res, next){
   }
 });
 
-router.get('/profile', function(req, res, next){
-  res.render('profile', {user : { firstName : 'Cesar', lastName : 'Cruz'}});
+router.get('/profile', auth, function(req, res, next){
+  res.render('profile', {user : req.user});
 });
 
-router.post('/profile', function(req, res, next){
+router.post('/profile', auth, function(req, res, next){
   
 });
 
 
-router.get('/', function(req, res, next){
-  res.render('login');  
-});
-
-router.post('/login', passport.authenticate('local'), function(req, res){
-  res.redirect('/keywords');
-});
-
+/**
+ * Register functions
+ */
 router.get('/register', function(req, res) {
     res.render('register', { });
 });
 
 router.post('/register', function(req, res) {
-  console.log(req.body);
     db.Users.register(new db.Users({ username : req.body.username }), req.body.password, function(err, account) {
         if (err) {
           console.log(err);
