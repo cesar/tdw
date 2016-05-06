@@ -2,13 +2,14 @@ var express = require('express');
 var router = express.Router();
 var db = require('../database');
 var http = require('http');
+var passport = require('passport');
 
 /**
 * Get keywords
 **/
-router.get('/keywords', function(req, res, next){
+router.get('/keywords',  function(req, res, next){
+  console.log(req.isAuthenticated());
   db.Keywords.find({}, function(err, keywords){
-    console.log(err);
     if(!err){
       res.render('index', {title : 'Current Searches', keywords : keywords});
     }
@@ -73,6 +74,41 @@ router.put('/keywords/:id', function(req, res, next){
   } else {
     res.redirect('index');
   }
+});
+
+router.get('/profile', function(req, res, next){
+  res.render('profile', {user : { firstName : 'Cesar', lastName : 'Cruz'}});
+});
+
+router.post('/profile', function(req, res, next){
+  
+});
+
+
+router.get('/', function(req, res, next){
+  res.render('login');  
+});
+
+router.post('/login', passport.authenticate('local'), function(req, res){
+  res.redirect('/keywords');
+});
+
+router.get('/register', function(req, res) {
+    res.render('register', { });
+});
+
+router.post('/register', function(req, res) {
+  console.log(req.body);
+    db.Users.register(new db.Users({ username : req.body.username }), req.body.password, function(err, account) {
+        if (err) {
+          console.log(err);
+            return res.render('register', { account : account });
+        }
+
+        passport.authenticate('local')(req, res, function () {
+            res.redirect('/keywords');
+        });
+    });
 });
 
 
