@@ -71,9 +71,7 @@ router.get('/keywords/:id', auth, function(req, res, next) {
 router.post('/keywords', auth, function(req, res, next){
 
     db.Keywords.create({
-      firstParameter : req.body.firstParameter || '',
-      secondParameter : req.body.secondParameter || '',
-      thirdParameter : req.body.thirdParameter || '',
+      parameter : req.body.parameter || '',
       user : req.user.id,
       status : true,
       created : Date.now(),

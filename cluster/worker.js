@@ -34,7 +34,8 @@ socket.on('tweet', function(tweet){
 
 function processTweet(tweet, keyword, id){
   console.log('miss');
-  if(tweet.text.search(keyword) > 0){
+  console.log(keyword);
+  if(tweet.text.includes(keyword)){
     db.Tweets.create({ tweet : tweet, keyword : id }, function(err){
       if(!err){ 
         countDate(tweet, id);
