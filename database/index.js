@@ -13,9 +13,7 @@ mongoose.connection.once('open', function() {
 });
 
 var keywordSchema = mongoose.Schema({
-  firstParameter : String,
-  secondParameter : String,
-  thirdParameter : String,
+  parameter : String,
   user : String,
   status : Boolean,
   created : Date,

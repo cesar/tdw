@@ -12,13 +12,14 @@ var db = require('../database');
 require('dotenv').config();
 var twit = require('twit');
 var keywordID = process.argv[2];
-var keywords = '';
+var keyword = '';
 
 
 if(keywordID){
-  db.Keywords.find({_id : keywordID}, function(err, docs){
+  db.Keywords.findOne({_id : keywordID}, function(err, keyword){
     if(!err){
-      keywords = docs[0].firstParameter;
+      keyword = keyword.parameter;
+
     }
   });
 } else {
@@ -27,13 +28,13 @@ if(keywordID){
 
 
 socket.on('tweet', function(tweet){
-  processTweet(tweet, keywords, keywordID);
+  processTweet(tweet, keyword, keywordID);
 });
 
 
-function processTweet(tweet, keywords, id){
+function processTweet(tweet, keyword, id){
   console.log('miss');
-  if(tweet.text.search(keywords[0]) > 0 || tweet.text.search(keywords[1]) > 0 || tweet.text.search(keywords[2]) > 0 ){
+  if(tweet.text.search(keyword) > 0){
     db.Tweets.create({ tweet : tweet, keyword : id }, function(err){
       if(!err){ 
         countDate(tweet, id);
