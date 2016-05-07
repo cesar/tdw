@@ -4,7 +4,7 @@ var passportLocalMongoose = require('passport-local-mongoose');
 
 
 //Connect to the database
-mongoose.connect(process.env.DATABASE_URL_DEV);
+mongoose.connect(process.env.DATABASE_URL);
 
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
