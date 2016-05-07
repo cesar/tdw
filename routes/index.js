@@ -15,6 +15,15 @@ function auth(req, res, next){
   }
 }
 
+function getURL(ip){
+  return 'http://' + ip;
+}
+
+
+router.get('/', function(req, res, next){
+  res.redirect('/keywords');
+});
+
 /**
  * Render login page
  */
@@ -33,7 +42,6 @@ router.post('/login', passport.authenticate('local'), function(req, res){
 * Get keywords
 **/
 router.get('/keywords',  auth, function(req, res, next){
-  
   db.Keywords.find({}, function(err, keywords){
     if(!err){
       res.render('index', {title : 'Current Searches', keywords : keywords, user : req.user});
@@ -66,9 +74,8 @@ router.post('/keywords', auth, function(req, res, next){
       firstParameter : req.body.firstParameter || '',
       secondParameter : req.body.secondParameter || '',
       thirdParameter : req.body.thirdParameter || '',
-      user : 1,
+      user : req.user.id,
       status : true,
-      pid : 0,
       created : Date.now(),
       sunday : 0,
       monday : 0,
@@ -76,10 +83,13 @@ router.post('/keywords', auth, function(req, res, next){
       wednesday : 0,
       thursday : 0,
       friday : 0,
-      saturday : 0
+      saturday : 0,
+      cluster : req.body.cluster
     }, function(err, keyword){
+      console.log(err);
       if(!err){
-        http.get('http://localhost:4000/start/' + keyword._id, () => {
+        var url = getURL(keyword.cluster);
+        http.get(url + '/start/' + keyword._id, (response) => {
           res.redirect('/keywords');
         });
       }
@@ -88,8 +98,8 @@ router.post('/keywords', auth, function(req, res, next){
 });
 
 router.put('/keywords/:id', auth, function(req, res, next){
-  if(req.body.action === 'start'){
-    http.get('http://localhost:4000/restart/' + req.params.id, () => {
+  if(req.body.action === 'start'){e
+    http.get(process.env.CLUSTER0_URL + '/restart/' + req.params.id, () => {
       res.redirect('/keywords');
     });
   } else if(req.body.action === 'stop'){
@@ -129,11 +139,6 @@ router.post('/register', function(req, res) {
         });
     });
 });
-
-
-
-
-
 
 
 

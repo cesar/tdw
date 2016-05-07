@@ -8,7 +8,7 @@
       <form action="/keywords" method="POST">
         <div class="form-group">
           <label for="firstParameter">First Keyword</label>
-          <input type="text" class="form-control" id="firstParameter" name="firstParameter">
+          <input type="text" class="form-control" id="firstParameter" name="firstParameter" required="true">
         </div>
         <div class="form-group">
           <label for="secondParamenter">Second Keyword</label>
@@ -17,6 +17,10 @@
         <div class="form-group">
           <label for="thirdParameter">Third Keyword</label>
           <input type="text" class="form-control" id="thirdParameter" name="thirdParameter">
+        </div>
+        <div class="form-group">
+          <label for="cluster">Cluster IP</label>
+          <input type="text" class="form-control" id="cluster" name="cluster" required="true">
         </div>
         <button type="submit" class="btn btn-success pull-right">Submit</button>
       </form>

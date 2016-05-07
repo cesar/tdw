@@ -16,9 +16,8 @@ var keywordSchema = mongoose.Schema({
   firstParameter : String,
   secondParameter : String,
   thirdParameter : String,
-  user : Number,
+  user : String,
   status : Boolean,
-  pid : Number,
   created : Date,
   sunday : Number,
   monday : Number,
@@ -27,7 +26,7 @@ var keywordSchema = mongoose.Schema({
   thursday : Number,
   friday : Number,
   saturday : Number,
-  address : String
+  cluster : String
 });
 
 var tweetSchema = mongoose.Schema({
