@@ -7,7 +7,7 @@
 
 //If the keyword does not exists, exit
 //If the keyword becomes inactive, kill the process.
-var socket = require('socket.io-client')(process.env.SPOUT_ADDRESS);
+var socket = require('socket.io-client')('http://localhost:4000/');
 var db = require('../database');
 require('dotenv').config();
 var twit = require('twit');

@@ -98,17 +98,30 @@ router.post('/keywords', auth, function(req, res, next){
 });
 
 router.put('/keywords/:id', auth, function(req, res, next){
-  if(req.body.action === 'start'){e
-    http.get(process.env.CLUSTER0_URL + '/restart/' + req.params.id, () => {
-      res.redirect('/keywords');
-    });
-  } else if(req.body.action === 'stop'){
-    http.get('http://localhost:4000/stop/' + req.params.id, () => {
-      res.redirect('/keywords');
-    });
-  } else {
-    res.redirect('index');
-  }
+   db.Keywords.findOne({_id : req.params.id}, function(err, keyword){
+     var url = getURL(keyword.cluster);
+     if(req.body.action === 'start'){
+        http.get(url + '/restart/' + req.params.id, () => {
+          keyword.status = true;
+          keyword.save(function(error){
+            if(!error){
+             res.sendStatus(200); 
+            }
+          });
+        });
+      } else if(req.body.action === 'stop'){
+        http.get(url + '/stop/' + req.params.id, () => {
+          keyword.status = false;
+          keyword.save(function(error){
+            if(!error){
+             res.sendStatus(200); 
+            }
+          });
+        });
+      } else {
+        res.sendStatus(400);
+      }
+   });
 });
 
 router.get('/profile', auth, function(req, res, next){

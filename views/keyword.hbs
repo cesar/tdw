@@ -68,7 +68,7 @@
       url : '/keywords/{{data.keyword._id}}',
       data : { action : 'stop'},
       type : 'PUT'
-    }).done(function(suc){
+    }).done(function(response, something){
       window.location = '/keywords';
     });
   }
@@ -79,7 +79,7 @@
       data : { action : 'start'},
       type : 'PUT'
     }).done(function(suc){
-      location.replace('/keywords');
+      window.location = "/keywords"
     });
   }
 </script>
