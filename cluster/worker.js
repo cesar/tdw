@@ -18,7 +18,7 @@ db.Keywords.findOne({_id : keywordID}, function(err, keyword){
   if(!err){
     var params = keyword.parameter;
     socket.on('tweet', function(tweet){
-      processTweet(tweet, keyword, keywordID);
+      processTweet(tweet, params, keywordID);
     });
   }
 });
