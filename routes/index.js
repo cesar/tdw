@@ -42,7 +42,7 @@ router.post('/login', passport.authenticate('local'), function(req, res){
 * Get keywords
 **/
 router.get('/keywords',  auth, function(req, res, next){
-  db.Keywords.find({}, function(err, keywords){
+  db.Keywords.find({}, {}, {limit : 50}, function(err, keywords){
     if(!err){
       res.render('index', {title : 'Current Searches', keywords : keywords, user : req.user});
     }

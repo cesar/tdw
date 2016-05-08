@@ -14,22 +14,25 @@ var twit = require('twit');
 var keywordID = process.argv[2];
 var keyword = '';
 
-
-if(keywordID){
-  db.Keywords.findOne({_id : keywordID}, function(err, keyword){
-    if(!err){
-      keyword = keyword.parameter;
-
-    }
-  });
-} else {
-  throw new Error("No keyword ID provided");
-}
-
-
-socket.on('tweet', function(tweet){
-  processTweet(tweet, keyword, keywordID);
+db.Keywords.findOne({_id : keywordID}, function(err, keyword){
+  if(!err){
+    var params = keyword.parameter;
+    socket.on('tweet', function(tweet){
+      processTweet(tweet, keyword, keywordID);
+    });
+  }
 });
+
+
+
+console.log(keyword);
+
+
+
+
+// while(true){
+//   console.log(keyword);
+// }
 
 
 function processTweet(tweet, keyword, id){
