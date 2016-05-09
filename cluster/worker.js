@@ -7,7 +7,7 @@
 
 //If the keyword does not exists, exit
 //If the keyword becomes inactive, kill the process.
-var socket = require('socket.io-client')('http://localhost:4000/');
+var socket = require('socket.io-client')('http://162.243.34.218:4000/');
 var db = require('../database');
 require('dotenv').config();
 var twit = require('twit');
@@ -36,8 +36,8 @@ console.log(keyword);
 
 
 function processTweet(tweet, keyword, id){
-  console.log('miss');
-  console.log(keyword);
+  //console.log('miss');
+  //console.log(keyword);
   if(tweet.text.includes(keyword)){
     db.Tweets.create({ tweet : tweet, keyword : id }, function(err){
       if(!err){ 
