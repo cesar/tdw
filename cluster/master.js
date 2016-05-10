@@ -42,7 +42,7 @@ app.get('/start/:id', function (req, res) {
   pm2.connect(function(err) {
     if (err) {
       console.error(err);
-      process.exit(2);
+      res.sendStatus(400);
     }
     pm2.start({
       script    : req.params.id + '.js',         
@@ -62,10 +62,11 @@ app.get('/list', function(req, res, next){
   pm2.connect(function(err){
     if (err) {
       console.error(err);
-      process.exit(2);
+      res.sendStatus(400);
     }
     pm2.list(function(err, list){
       if(err) throw err;
+      pm2.disconnect();
       res.json({
        list : list 
       });
@@ -78,10 +79,11 @@ app.get('/stop/:id', function(req, res){
   pm2.connect(function(err) {
     if (err) {
       console.error(err);
-      process.exit(2);
+      res.sendStatus(400);
     }
     pm2.stop(req.params.id, function(err){
       if(err) throw err;
+      pm2.disconnect();
       res.sendStatus(200);
     })
   });
@@ -94,10 +96,11 @@ app.get('/restart/:id', function(req, res, next){
   pm2.connect(function(err){
     if(err) {
       console.error(err);
-      process.exit(2);
+      res.sendStatus(400);
     }
     pm2.start({ name : req.params.id }, function(err){
       if(err) throw err;
+      pm2.disconnect();
       res.sendStatus(200);
     });
   });

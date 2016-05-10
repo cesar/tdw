@@ -39,6 +39,14 @@ router.post('/login', passport.authenticate('local'), function(req, res){
 });
 
 /**
+ * Logout the user
+ */
+router.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/login');
+});
+
+/**
 * Get keywords
 **/
 router.get('/keywords',  auth, function(req, res, next){
@@ -87,6 +95,7 @@ router.post('/keywords', auth, function(req, res, next){
       console.log(err);
       if(!err){
         var url = getURL(keyword.cluster);
+        console.log(url);
         http.get(url + '/start/' + keyword._id, (response) => {
           res.redirect('/keywords');
         });
@@ -120,14 +129,6 @@ router.put('/keywords/:id', auth, function(req, res, next){
         res.sendStatus(400);
       }
    });
-});
-
-router.get('/profile', auth, function(req, res, next){
-  res.render('profile', {user : req.user});
-});
-
-router.post('/profile', auth, function(req, res, next){
-  
 });
 
 

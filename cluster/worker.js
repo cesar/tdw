@@ -25,26 +25,14 @@ db.Keywords.findOne({_id : keywordID}, function(err, keyword){
 
 
 
-console.log(keyword);
-
-
-
-
-// while(true){
-//   console.log(keyword);
-// }
-
-
 function processTweet(tweet, keyword, id){
-  //console.log('miss');
-  //console.log(keyword);
-  if(tweet.text.includes(keyword)){
+  //if(tweet.text.includes(keyword)){
     db.Tweets.create({ tweet : tweet, keyword : id }, function(err){
       if(!err){ 
         countDate(tweet, id);
       }
     });
-  }
+  //}
 }
 
 
@@ -54,12 +42,12 @@ function processTweet(tweet, keyword, id){
  */
 function countDate(tweet, id){
   var day = new Date().getDay();
-  console.log(day);
   switch(day){
     case(0): //Sunday
       db.Keywords.update({_id : id}, {$inc : { 'sunday' : 1}});
       break;
     case(1): 
+      console.log('jere');
       db.Keywords.update({_id : id}, {$inc : { 'monday' : 1}});
       break;
     case(2): 
